@@ -8,7 +8,7 @@ class laynger(sublime_plugin.TextCommand):
 
         layout = window.get_layout()
 
-        if len(layout['cols']) != 2:
+        if len(layout['cols']) != 3:
             return
 
         if opt == u'center':
