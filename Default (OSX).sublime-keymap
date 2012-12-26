@@ -1,0 +1,5 @@
+[
+  { "keys": ["super+alt+right"], "command": "laynger", "args" : { "opt": "right"  } },
+	{ "keys": ["super+alt+left" ], "command": "laynger", "args" : { "opt": "left"   } },
+	{ "keys": ["super+alt+c"    ], "command": "laynger", "args" : { "opt": "center" } }
+]
