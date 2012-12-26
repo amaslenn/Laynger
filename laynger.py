@@ -14,8 +14,10 @@ class laynger(sublime_plugin.TextCommand):
         if opt == u'center':
             layout['cols'][1] = 0.5
         elif opt == u'right':
-            layout['cols'][1] += 0.01
+            if layout['cols'][1] < 0.99:
+                layout['cols'][1] += 0.01
         else:
-            layout['cols'][1] -= 0.01
+            if layout['cols'][1] > 0.01:
+                layout['cols'][1] -= 0.01
 
         window.run_command('set_layout', layout)
