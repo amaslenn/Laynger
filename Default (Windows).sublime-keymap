@@ -1,5 +1,5 @@
 [
 	{ "keys": ["alt+shift+right"], "command": "laynger", "args" : { "opt": "right"  } },
 	{ "keys": ["alt+shift+left" ], "command": "laynger", "args" : { "opt": "left"   } },
-	{ "keys": ["alt+shift+c"    ], "command": "laynger", "args" : { "opt": "center" } }
+	{ "keys": ["alt+shift+d"    ], "command": "laynger", "args" : { "opt": "default"} }
 ]

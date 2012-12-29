@@ -2,16 +2,17 @@
 import sublime_plugin
 
 
-class laynger(sublime_plugin.TextCommand):
-    def run(self, edit, opt='center'):
+class Laynger(sublime_plugin.TextCommand):
+    def run(self, edit, opt='default'):
         window = self.view.window()
 
         layout = window.get_layout()
 
+        # support only 2 columns
         if len(layout['cols']) != 3:
             return
 
-        if opt == u'center':
+        if opt == u'default':
             layout['cols'][1] = 0.5
         elif opt == u'right':
             if layout['cols'][1] < 0.99:
