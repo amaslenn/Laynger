@@ -1,18 +1,35 @@
-#import sublime
+import sublime
 import sublime_plugin
 
+SETTINGS_FILE = 'laynger.sublime-settings'
+STORE_FILE = 'laynger_store.sublime-settings'
+DEFAULT = {
+    '1_column':   {"cols": [0.0, 1.0], "rows": [0.0, 1.0], "cells": [[0, 0, 1, 1]]},
+    '2_columns':  {"cols": [0.0, 0.5, 1.0], "rows": [0.0, 1.0], "cells": [[0, 0, 1, 1], [1, 0, 2, 1]]}
+}
 
-class Laynger(sublime_plugin.TextCommand):
-    def run(self, edit, opt='default'):
+
+class laynger(sublime_plugin.TextCommand):
+    def run(self, edit, opt='center'):
+        settings = sublime.load_settings(SETTINGS_FILE)
+
         window = self.view.window()
-
         layout = window.get_layout()
 
-        # support only 2 columns
+        if opt == u'1_column':
+            window.set_layout(DEFAULT['1_column'])
+            return
+        elif opt == u'2_columns':
+            store = sublime.load_settings(STORE_FILE)
+            if settings.get('save_and_restore') and store.has('2_columns'):
+                window.set_layout(store.get('2_columns'))
+            else:
+                window.set_layout(DEFAULT['2_columns'])
+
         if len(layout['cols']) != 3:
             return
 
-        if opt == u'default':
+        if opt == u'center':
             layout['cols'][1] = 0.5
         elif opt == u'right':
             if layout['cols'][1] < 0.99:
@@ -22,3 +39,16 @@ class Laynger(sublime_plugin.TextCommand):
                 layout['cols'][1] -= 0.01
 
         window.run_command('set_layout', layout)
+
+        if settings.get('save_and_restore'):
+            self.save_layout()
+
+    def save_layout(self):
+        store = sublime.load_settings(STORE_FILE)
+
+        layout = self.view.window().get_layout()
+        ncolumns = len(layout['cols']) - 1
+        if ncolumns == 2:
+            store.set("2_columns", layout)
+
+        sublime.save_settings(STORE_FILE)

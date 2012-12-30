@@ -1,0 +1,4 @@
+{
+	// keep modified layout borders on layout switch
+	"save_and_restore": true
+}
