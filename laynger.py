@@ -10,7 +10,7 @@ DEFAULT = {
 
 
 class laynger(sublime_plugin.TextCommand):
-    def run(self, edit, opt='center'):
+    def run(self, edit, opt='default'):
         settings = sublime.load_settings(SETTINGS_FILE)
 
         window = self.view.window()
@@ -29,7 +29,7 @@ class laynger(sublime_plugin.TextCommand):
         if len(layout['cols']) != 3:
             return
 
-        if opt == u'center':
+        if opt == u'default':
             layout['cols'][1] = 0.5
         elif opt == u'right':
             if layout['cols'][1] < 0.99:
