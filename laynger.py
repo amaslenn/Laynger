@@ -26,14 +26,16 @@ class laynger(sublime_plugin.TextCommand):
         if len(layout['cols']) != 3:
             return
 
-        if opt == u'default':
-            layout['cols'][1] = 0.5
+        if opt == u'left':
+            if layout['cols'][1] > 0.01:
+                layout['cols'][1] -= 0.01
         elif opt == u'right':
             if layout['cols'][1] < 0.99:
                 layout['cols'][1] += 0.01
+        elif opt == u'default':
+            layout['cols'][1] = 0.5
         else:
-            if layout['cols'][1] > 0.01:
-                layout['cols'][1] -= 0.01
+            return
 
         window.run_command('set_layout', layout)
 
