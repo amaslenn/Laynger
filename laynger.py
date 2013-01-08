@@ -11,8 +11,7 @@ DEFAULT = {
 
 class laynger(sublime_plugin.TextCommand):
     def run(self, edit, opt='default'):
-        settings = sublime.load_settings(SETTINGS_FILE)
-
+        #settings = sublime.load_settings(SETTINGS_FILE)
         window = self.view.window()
         layout = window.get_layout()
 
@@ -21,10 +20,8 @@ class laynger(sublime_plugin.TextCommand):
             return
         elif opt == u'2_columns':
             store = sublime.load_settings(STORE_FILE)
-            if settings.get('save_and_restore') and store.has('2_columns'):
-                window.set_layout(store.get('2_columns'))
-            else:
-                window.set_layout(DEFAULT['2_columns'])
+            window.set_layout(store.get('2_columns'))
+            return
 
         if len(layout['cols']) != 3:
             return
@@ -40,8 +37,7 @@ class laynger(sublime_plugin.TextCommand):
 
         window.run_command('set_layout', layout)
 
-        if settings.get('save_and_restore'):
-            self.save_layout()
+        self.save_layout()
 
     def save_layout(self):
         store = sublime.load_settings(STORE_FILE)

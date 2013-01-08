@@ -1,4 +1,4 @@
 {
-	// keep modified layout borders on layout switch
-	"save_and_restore": true
+	// keep tab groups
+	"save_and_restore_groups": true
 }
