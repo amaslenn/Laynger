@@ -11,42 +11,101 @@ DEFAULT = {
 
 class laynger(sublime_plugin.TextCommand):
     def run(self, edit, opt='default'):
-        #settings = sublime.load_settings(SETTINGS_FILE)
+        settings = sublime.load_settings(SETTINGS_FILE)
+
         window = self.view.window()
         layout = window.get_layout()
 
         if opt == u'1_column':
+            if settings.get('save_and_restore'):
+                self.save_groups()
             window.set_layout(DEFAULT['1_column'])
             return
         elif opt == u'2_columns':
             store = sublime.load_settings(STORE_FILE)
-            window.set_layout(store.get('2_columns'))
-            return
+            if settings.get('save_and_restore') and store.has('2_columns'):
+                window.set_layout(store.get('2_columns'))
+                if store.has('groups'):
+                    self.restore_groups()
+            else:
+                window.set_layout(DEFAULT['2_columns'])
 
         if len(layout['cols']) != 3:
             return
 
-        if opt == u'left':
-            if layout['cols'][1] > 0.01:
-                layout['cols'][1] -= 0.01
+        if opt == u'default':
+            layout['cols'][1] = 0.5
         elif opt == u'right':
             if layout['cols'][1] < 0.99:
                 layout['cols'][1] += 0.01
-        elif opt == u'default':
-            layout['cols'][1] = 0.5
         else:
-            return
+            if layout['cols'][1] > 0.01:
+                layout['cols'][1] -= 0.01
 
         window.run_command('set_layout', layout)
 
-        self.save_layout()
+        if settings.get('save_and_restore'):
+            self.save_layout()
 
     def save_layout(self):
         store = sublime.load_settings(STORE_FILE)
+        window = self.view.window()
 
-        layout = self.view.window().get_layout()
+        layout = window.get_layout()
         ncolumns = len(layout['cols']) - 1
         if ncolumns == 2:
             store.set("2_columns", layout)
 
+        self.save_groups()
+
+    def save_groups(self):
+        store = sublime.load_settings(STORE_FILE)
+        window = self.view.window()
+
+        groups = {'num_groups': window.num_groups(), 'files': {}}
+        for group_id in range(0, window.num_groups()):
+            views = window.views_in_group(group_id)
+            i = 0
+            for v in views:
+                f = v.file_name()
+                k = str(group_id) + '-' + str(i)
+                groups['files'][k] = f
+                i+=1
+
+        store.set('groups', groups)
+
         sublime.save_settings(STORE_FILE)
+
+    def restore_groups(self):
+        window = self.view.window()
+        views = window.views()
+
+        store = sublime.load_settings(STORE_FILE)
+        groups = store.get('groups')
+
+        active_file = window.active_view().file_name()
+
+        last_view_in_group = [0 for i in range(0, groups['num_groups'])]
+
+        used_keys = {}
+        used_views = {}
+        for view in window.views():
+            f = view.file_name()
+            for k in groups['files']:
+                if used_keys.has_key(k):
+                    continue
+                if used_views.has_key(str(view)):
+                    continue
+                group_id = int(k.split('-')[0])
+                stored_f = groups['files'][k]
+                if stored_f == f:
+                    window.set_view_index(view, group_id, last_view_in_group[group_id])
+                    last_view_in_group[group_id]+=1
+                    used_keys[k] = 1
+                    used_views[str(view)] = 1
+
+        for v in views:
+            f = v.file_name()
+            if f == active_file:
+                window.focus_view(v)
+        return
