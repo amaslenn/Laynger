@@ -1,4 +1,7 @@
 {
-	// keep tab groups
-	"save_and_restore_groups": true
+	// save and restore borders
+	"keep_layout": true,
+
+	// save and restore files in groups
+	"keep_groups": true
 }

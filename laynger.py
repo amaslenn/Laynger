@@ -17,18 +17,18 @@ class laynger(sublime_plugin.TextCommand):
         layout = window.get_layout()
 
         if opt == u'1_column':
-            if settings.get('save_and_restore'):
+            if True == settings.get('keep_groups'):
                 self.save_groups()
             window.set_layout(DEFAULT['1_column'])
             return
         elif opt == u'2_columns':
             store = sublime.load_settings(STORE_FILE)
-            if settings.get('save_and_restore') and store.has('2_columns'):
+            if True == settings.get('keep_layout') and store.has('2_columns'):
                 window.set_layout(store.get('2_columns'))
-                if store.has('groups'):
-                    self.restore_groups()
             else:
                 window.set_layout(DEFAULT['2_columns'])
+            if True == settings.get('keep_groups') and store.has('groups'):
+                self.restore_groups()
 
         if len(layout['cols']) != 3:
             return
@@ -44,10 +44,11 @@ class laynger(sublime_plugin.TextCommand):
 
         window.run_command('set_layout', layout)
 
-        if settings.get('save_and_restore'):
+        if True == settings.get('keep_layout'):
             self.save_layout()
 
     def save_layout(self):
+        settings = sublime.load_settings(SETTINGS_FILE)
         store = sublime.load_settings(STORE_FILE)
         window = self.view.window()
 
@@ -56,7 +57,8 @@ class laynger(sublime_plugin.TextCommand):
         if ncolumns == 2:
             store.set("2_columns", layout)
 
-        self.save_groups()
+        if True == settings.get('keep_groups'):
+            self.save_groups()
 
     def save_groups(self):
         store = sublime.load_settings(STORE_FILE)
