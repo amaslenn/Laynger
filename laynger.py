@@ -94,9 +94,9 @@ class laynger(sublime_plugin.TextCommand):
         for view in window.views():
             f = view.file_name()
             for k in groups['files']:
-                if used_keys.has_key(k):
+                if k in used_keys:
                     continue
-                if used_views.has_key(str(view)):
+                if str(view) in used_views:
                     continue
                 group_id = int(k.split('-')[0])
                 stored_f = groups['files'][k]
