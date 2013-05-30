@@ -1,5 +1,7 @@
 [
 	{ "keys": ["super+alt+right"], "command": "laynger", "args" : { "opt": "right"  } },
 	{ "keys": ["super+alt+left" ], "command": "laynger", "args" : { "opt": "left"   } },
-	{ "keys": ["super+alt+d"    ], "command": "laynger", "args" : { "opt": "default"} }
+	{ "keys": ["super+alt+d"    ], "command": "laynger", "args" : { "opt": "default"} },
+//	{ "keys": ["super+alt+1"], "command": "laynger", "args" : { "opt": "1_column"} },
+//	{ "keys": ["super+alt+2"], "command": "laynger", "args" : { "opt": "2_columns"} }
 ]
